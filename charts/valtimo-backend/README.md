@@ -35,19 +35,19 @@ A Helm chart for Kubernetes
 | ingress.hosts[0].paths[0] | object | `{"path":"/","pathType":"ImplementationSpecific"}` | Ingress path |
 | ingress.hosts[0].paths[0].pathType | string | `"ImplementationSpecific"` | Ingress path type |
 | ingress.tls | list | `[]` | Enable TLS for the Ingress |
-| keycloak | string | `nil` |  |
+| keycloak | string | `nil` | Keycloak subchart by Bitnami. See https://artifacthub.io/packages/helm/bitnami/keycloak?modal=values for all possible values |
 | livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | livenessProbe.initialDelaySeconds | int | `40` | Initial delay seconds for livenessProbe |
 | livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
 | livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | livenessProbe.timeoutSeconds | int | `1` | Timeout seconds for livenessProbe |
-| mysql | string | `nil` |  |
+| mysql | string | `nil` | MySQL subchart by Bitnami. See https://artifacthub.io/packages/helm/bitnami/mysql?modal=values for all possible values |
 | nameOverride | string | `""` | Name override for Valtimo-Backend |
 | nodeSelector | object | `{}` | Node labels for Valtimo-backend pods assignment |
 | podAnnotations | object | `{}` | Annotations for Valtimo-backend pods |
 | podLabels | object | `{}` | Labels for Valtimo-backend pods |
 | podSecurityContext.fsGroup | int | `2000` | Set Valtimo-backend's pod security fsGroup |
-| postgresql | string | `nil` |  |
+| postgresql | string | `nil` | Postgresql subchart by Bitnami. See https://artifacthub.io/packages/helm/bitnami/postgresql?modal=values for all possible values |
 | readinessProbe.failureThreshold | int | `6` | Failure threshold for readinessProbe |
 | readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
