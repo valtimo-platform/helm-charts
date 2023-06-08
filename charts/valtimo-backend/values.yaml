@@ -202,6 +202,13 @@ settings:
 ##########################################################################
 # -- Postgresql subchart by Bitnami. See https://artifacthub.io/packages/helm/bitnami/postgresql?modal=values for all possible values
 postgresql:
+  auth:
+    postgresPassword: ""
+    existingSecret: ""
+    secretKeys:
+      adminPasswordKey: ""
+      userPasswordKey: ""
+      replicationPasswordKey: ""
 
 ########################################################################
 ## MySQL subchart                                                     ##
@@ -209,6 +216,9 @@ postgresql:
 ########################################################################
 # -- MySQL subchart by Bitnami. See https://artifacthub.io/packages/helm/bitnami/mysql?modal=values for all possible values
 mysql:
+  auth:
+    rootPassword: ""
+    existingSecret: ""
 
 ########################################################################
 ## Keycloak subchart                                                  ##
@@ -216,3 +226,7 @@ mysql:
 ########################################################################
 # -- Keycloak subchart by Bitnami. See https://artifacthub.io/packages/helm/bitnami/keycloak?modal=values for all possible values
 keycloak: 
+  auth:
+    adminUser: user
+    adminPassword: ""
+    existingSecret: ""
