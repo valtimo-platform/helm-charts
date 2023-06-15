@@ -1,0 +1,43 @@
+name: Build and Publish Helm Chart
+
+on:
+  workflow_dispatch:
+    inputs:
+      chartversion:
+        description: 'Chart Version'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: '3'
+
+      - name: Build Valtimo Backend Helm Chart
+        run: |
+          helm package valtimo-backend --version INPUT_CHARTVERSION
+      
+      - name: Build Valtimo Frontend Helm Chart
+        run: |
+          helm package valtimo-frontend --version INPUT_CHARTVERSION
+        
+      - name: Publish Valtimo Backend Helm Chart
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/valtimo-platform//chart-valtimo-backend:INPUT_CHARTVERSION
+      
+      - name: Publish Valtimo Frontend Helm Chart
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/valtimo-platform//chart-valtimo-frontend:INPUT_CHARTVERSION

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "valtimo-frontend.fullname" . }}
+  labels:
+    {{- include "valtimo-frontend.labels" . | nindent 4 }}
+data: 
+  KEYCLOAK_URL: {{ .Values.settings.keycloak.url | quote }}
+  KEYCLOAK_REALM: {{ .Values.settings.keycloak.realm | quote }}
+  KEYCLOAK_CLIENT_ID: {{ .Values.settings.keycloak.clientID | quote }}
+  KEYCLOAK_LOGOUT_REDIRECT_URI: {{ .Values.settings.keycloak.logoutRedirectURL | quote }}
+  KEYCLOAK_REDIRECT_URI: {{ .Values.settings.keycloak.redirectURL | quote }}
+  API_URI: {{ .Values.settings.apiURL | quote }}
+  WHITELISTED_DOMAIN: {{ .Values.settings.whitelistedDomain | quote }}
