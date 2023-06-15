@@ -3,9 +3,14 @@ name: Build and Publish Helm Chart
 on:
   workflow_dispatch:
     inputs:
-      chartversion:
+      chartVersion:
         description: 'Chart Version'
         required: true
+
+env:
+  HELM_EXPERIMENTAL_OCI: 1 #enable OCI support
+  HELM_VERSION_TO_INSTALL: 3.5.0 # version of HEL to install
+  GITHUB_CONTAINER_REGISTRY: ghcr.io/valtimo-platform
 
 jobs:
   build:
@@ -15,30 +20,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Helm
+      - name: install helm
+        uses: Azure/setup-helm@v1
+        with:
+          version: ${{ env.HELM_VERSION_TO_INSTALL }}
+
+      - name: Generate helm index file for Valtimo Backend
         run: |
-          wget https://get.helm.sh/helm-v3.7.0-linux-amd64.tar.gz
-          tar -zxvf helm-v3.7.0-linux-amd64.tar.gz
-          mv linux-amd64/helm /usr/local/bin/helm
+          helm repo index charts/valtimo-backend 
+
+      - name: Generate helm index file for Valtimo Frontend
+        run: |
+          helm repo index charts/valtimo-frontend 
+
+      - name: Save Valtimo Backend helm chart to local registry
+        run: |
+          tree .
+          helm chart save charts/valtimo-backend ${{ env.GITHUB_CONTAINER_REGISTRY }}/chart-valtimo-backend:${{ github.event.inputs.chartVersion }}
+
+      - name: Save Valtimo Frontend helm chart to local registry
+        run: |
+          helm chart save charts/valtimo-frontend ${{ env.GITHUB_CONTAINER_REGISTRY }}/chart-valtimo-frontend:${{ github.event.inputs.chartVersion }}
+
+      - name: login to acr using helm
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ env.GITHUB_CONTAINER_REGISTRY }} --username ${{ github.actor }} --password-stdin
 
       - name: Build Valtimo Backend Helm Chart
         run: |
-          helm package /charts/valtimo-backend --version INPUT_CHARTVERSION
+          helm chart push ${{ env.GITHUB_CONTAINER_REGISTRY }}/chart-valtimo-backend:${{ github.event.inputs.chartVersion }}
       
       - name: Build Valtimo Frontend Helm Chart
         run: |
-          helm package /charts/valtimo-frontend --version INPUT_CHARTVERSION
-        
-      - name: Publish Valtimo Backend Helm Chart
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/valtimo-platform//chart-valtimo-backend:INPUT_CHARTVERSION
-      
-      - name: Publish Valtimo Frontend Helm Chart
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/valtimo-platform//chart-valtimo-frontend:INPUT_CHARTVERSION
+          helm chart push ${{ env.GITHUB_CONTAINER_REGISTRY }}/chart-valtimo-frontend:${{ github.event.inputs.chartVersion }}
