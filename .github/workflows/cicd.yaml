@@ -23,11 +23,11 @@ jobs:
 
       - name: Build Valtimo Backend Helm Chart
         run: |
-          helm package valtimo-backend --version INPUT_CHARTVERSION
+          helm package /charts/valtimo-backend --version INPUT_CHARTVERSION
       
       - name: Build Valtimo Frontend Helm Chart
         run: |
-          helm package valtimo-frontend --version INPUT_CHARTVERSION
+          helm package /charts/valtimo-frontend --version INPUT_CHARTVERSION
         
       - name: Publish Valtimo Backend Helm Chart
         uses: docker/build-push-action@v2
