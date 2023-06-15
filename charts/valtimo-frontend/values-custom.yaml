@@ -1,0 +1,163 @@
+# Default values for valtimo-frontend.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Amount of replicas running the Valtimo-backend
+replicaCount: 1
+
+image:
+  # -- Domain of the image repository
+  repository: "ghcr.io/valtimo-platform/apaas-valtimo-frontend"
+  # -- Pull policy for the image
+  pullPolicy: IfNotPresent
+  # -- Overrides the image tag whose default is the chart appVersion.
+  tag: "main-3d07e2a8"
+
+# -- Image pull secrets
+imagePullSecrets: 
+  - name: ghcr
+# -- Name override for Valtimo-Backend
+nameOverride: ""
+# -- String to fully override valitmo-backend.fullname
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Annotations for Valtimo-backend pods
+podAnnotations: {}
+
+# -- Labels for Valtimo-backend pods
+podLabels: {}
+
+podSecurityContext: 
+  # -- Set Valtimo-backend's pod security fsGroup
+  fsGroup: 2000
+
+securityContext: 
+  capabilities:
+    # -- Valtimo-backend's container security context capabilities to be dropped
+    drop:
+    - ALL
+  # -- Valtimo-backend's container security context readOnlyRootFilesystem
+  readOnlyRootFilesystem: false
+  # -- Run Valtimo-backend containers as non-root
+  runAsNonRoot: true
+  # -- Run Valtimo-backend containers under this user-ID
+  runAsUser: 1000
+
+service:
+  # -- Valtimo-backend service type
+  type: ClusterIP
+  # -- Valtimo-backend service port
+  port: 80
+
+ingress:
+  # -- Expose the Valtimo-backend UI through an ingress
+  enabled: true
+  # -- Ingress Class which will be used to implement the Ingress
+  className: "alb"
+  # -- Ingress annotations
+  annotations: 
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:647007154019:certificate/c1a53b7a-b477-42b0-870a-ef7454321314
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/group.name: "nonprod"
+  hosts: 
+    - host: apaas-test.firstcustomer.aws-playground.ritense.com
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: valtimo-frontend
+              port:
+                number: 8080
+  # -- Enable TLS for the Ingress
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+livenessProbe:
+  # -- Initial delay seconds for livenessProbe
+  initialDelaySeconds: 10
+  # -- Period seconds for livenessProbe
+  periodSeconds: 10
+  # -- Timeout seconds for livenessProbe
+  timeoutSeconds: 1
+  # -- Failure threshold for livenessProbe
+  failureThreshold: 6
+  # -- Success threshold for livenessProbe
+  successThreshold: 1
+
+readinessProbe:
+  # -- Initial delay seconds for readinessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for readinessProbe
+  periodSeconds: 10
+  # -- Timeout seconds for readinessProbe
+  timeoutSeconds: 1
+  # -- Failure threshold for readinessProbe
+  failureThreshold: 6
+  # -- Success threshold for readinessProbe
+  successThreshold: 1
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  # -- Enable/disable autoscaling for the Valtimo-backend deployment
+  enabled: false
+  # -- Minimum replicas for the Valtimo-backend deployment
+  minReplicas: 1
+  # -- Maximum replicas for the Valtimo-backend deployment
+  maxReplicas: 100
+  # -- Valtimo-backend Deployment autoscaling target CPU percentage
+  targetCPUUtilizationPercentage: 80
+  # -- Valtimo-backend Deployment autoscaling target Mem utilization percentage
+  targetMemoryUtilizationPercentage: 80
+
+# -- Node labels for Valtimo-backend pods assignment
+nodeSelector: {}
+
+# -- Tolerations for Valtimo-backend pods assignment
+tolerations: []
+
+# -- Affinity for Valtimo-backend pods assignment 
+affinity: {}
+
+settings: 
+  # -- URL where the Valtimo-API is located
+  apiURL: "http://apaas-test.firstcustomer.aws-playground.ritense.com/api"
+  # -- Domain on which the app can run
+  whitelistedDomain: "http://apaas-test.firstcustomer.aws-playground.ritense.com"
+
+  keycloak:
+    # -- URL which exposes Keycloak
+    url: "https://apaas-keycloak.firstcustomer.aws-playground.ritense.com/"
+    # -- ClientID to use for authentication
+    clientID: "valtimo-console"
+    # -- Keycloak realm
+    realm: "firstclient-nonprod"
+    # -- The URL to redirect to after logout
+    logoutRedirectURL: "http://apaas-test.firstcustomer.aws-playground.ritense.com/"
+    # -- The URL to redirect to after a succesfull login
+    redirectURL: "http://apaas-test.firstcustomer.aws-playground.ritense.com/keycloak/callback"
