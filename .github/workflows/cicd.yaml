@@ -2,14 +2,10 @@ name: Build and Publish Helm Chart
 
 on:
   workflow_dispatch:
-    inputs:
-      chartVersion:
-        description: 'Chart Version'
-        required: true
 
 env:
   HELM_EXPERIMENTAL_OCI: 1 #enable OCI support
-  HELM_VERSION_TO_INSTALL: 3.5.0 # version of HEL to install
+  HELM_VERSION_TO_INSTALL: 3.9.0 # version of HEL to install
   GITHUB_CONTAINER_REGISTRY: ghcr.io/valtimo-platform
 
 jobs:
@@ -21,35 +17,27 @@ jobs:
         uses: actions/checkout@v2
 
       - name: install helm
-        uses: Azure/setup-helm@v1
+        uses: Azure/setup-helm@v3
         with:
           version: ${{ env.HELM_VERSION_TO_INSTALL }}
 
       - name: Generate helm index file for Valtimo Backend
-        run: |
-          helm repo index charts/valtimo-backend 
+        run: helm repo index charts/valtimo-backend
 
       - name: Generate helm index file for Valtimo Frontend
-        run: |
-          helm repo index charts/valtimo-frontend 
+        run: helm repo index charts/valtimo-frontend
 
-      - name: Save Valtimo Backend helm chart to local registry
-        run: |
-          tree .
-          helm chart save charts/valtimo-backend ${{ env.GITHUB_CONTAINER_REGISTRY }}/chart-valtimo-backend:${{ github.event.inputs.chartVersion }}
+      - name: Package Valtimo Backend helm chart
+        run: helm package charts/valtimo-backend
 
-      - name: Save Valtimo Frontend helm chart to local registry
-        run: |
-          helm chart save charts/valtimo-frontend ${{ env.GITHUB_CONTAINER_REGISTRY }}/chart-valtimo-frontend:${{ github.event.inputs.chartVersion }}
+      - name: Package Valtimo Frontend helm chart
+        run: helm package charts/valtimo-frontend
 
       - name: login to acr using helm
-        run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ env.GITHUB_CONTAINER_REGISTRY }} --username ${{ github.actor }} --password-stdin
+        run: echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ env.GITHUB_CONTAINER_REGISTRY }} --username ${{ github.actor }} --password-stdin
 
       - name: Build Valtimo Backend Helm Chart
-        run: |
-          helm chart push ${{ env.GITHUB_CONTAINER_REGISTRY }}/chart-valtimo-backend:${{ github.event.inputs.chartVersion }}
+        run: helm push valtimo-backend-0.1.0.tgz oci://${{ env.GITHUB_CONTAINER_REGISTRY }}/chart-valtimo-backend
       
       - name: Build Valtimo Frontend Helm Chart
-        run: |
-          helm chart push ${{ env.GITHUB_CONTAINER_REGISTRY }}/chart-valtimo-frontend:${{ github.event.inputs.chartVersion }}
+        run: helm push valtimo-frontend-0.1.0.tgz oci://${{ env.GITHUB_CONTAINER_REGISTRY }}/chart-valtimo-frontend
