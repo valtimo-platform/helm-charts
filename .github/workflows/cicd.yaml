@@ -3,11 +3,6 @@ name: Build and Publish Helm Chart
 on:
   workflow_dispatch:
 
-env:
-  HELM_EXPERIMENTAL_OCI: 1 #enable OCI support
-  HELM_VERSION_TO_INSTALL: 3.9.0 # version of HEL to install
-  GITHUB_CONTAINER_REGISTRY: ghcr.io/valtimo-platform
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,25 +14,13 @@ jobs:
       - name: install helm
         uses: Azure/setup-helm@v3
         with:
-          version: ${{ env.HELM_VERSION_TO_INSTALL }}
+          version: 3.9.0
 
-      - name: Generate helm index file for Valtimo Backend
-        run: helm repo index charts/valtimo-backend
+      - name: Add dependency chart repos
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
 
-      - name: Generate helm index file for Valtimo Frontend
-        run: helm repo index charts/valtimo-frontend
-
-      - name: Package Valtimo Backend helm chart
-        run: helm package charts/valtimo-backend
-
-      - name: Package Valtimo Frontend helm chart
-        run: helm package charts/valtimo-frontend
-
-      - name: login to acr using helm
-        run: echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ env.GITHUB_CONTAINER_REGISTRY }} --username ${{ github.actor }} --password-stdin
-
-      - name: Build Valtimo Backend Helm Chart
-        run: helm push valtimo-backend-0.1.0.tgz oci://${{ env.GITHUB_CONTAINER_REGISTRY }}/chart-valtimo-backend
-      
-      - name: Build Valtimo Frontend Helm Chart
-        run: helm push valtimo-frontend-0.1.0.tgz oci://${{ env.GITHUB_CONTAINER_REGISTRY }}/chart-valtimo-frontend
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.1.0
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
