@@ -16,4 +16,4 @@ data:
   VALTIMO_APP_HOSTNAME: {{ .Values.settings.valtimo.appHostname | quote }}
   VALTIMO_DATABASE: {{ .Values.settings.valtimo.databaseType | quote }}
   CAMUNDA_BPM_ADMINUSER_ID: {{ .Values.settings.camunda.adminUserID | quote }}
-  TEST_VALUE2: "random value"
+  TEST_VALUE: "random value"
