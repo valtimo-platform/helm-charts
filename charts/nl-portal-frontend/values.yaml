@@ -41,6 +41,7 @@ securityContext: {}
 service:
   type: ClusterIP
   port: 80
+  targetPort: 8080
 
 ingress:
   enabled: false
@@ -59,6 +60,9 @@ ingress:
   #      - chart-example.local
 
 livenessProbe:
+  httpGet:
+    path: /
+    port: 8081
   initialDelaySeconds: 40
   periodSeconds: 10
   timeoutSeconds: 1
@@ -66,6 +70,9 @@ livenessProbe:
   successThreshold: 1
 
 readinessProbe:
+  httpGet:
+    path: /
+    port: 8081
   initialDelaySeconds: 20
   periodSeconds: 10
   timeoutSeconds: 1
