@@ -58,13 +58,16 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
+          volumeMounts:
+            - name: media
+              mountPath: {{ .Values.persistence.mountPath }}
       volumes:
         - name: media
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{ - else }}{{ include "valtimo-backend.fullname" . }}{{ - end }}
+            claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{ -else }}{{ include "valtimo-backend.fullname" . }}{{- end }}
           {{- else }}
-          emptyDir: { }
+          emptyDir: {}
       {{- end }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
