@@ -158,6 +158,7 @@ persistence:
   size: 1Gi
   storageClass: ""
   persistentVolumeReclaimPolicy: Retain
+  existingClaim: null
 
 settings:
 
