@@ -24,7 +24,6 @@ spec:
 storageClassName: ""
   {{- else }}
 storageClassName: "{{ .Values.persistence.storageClass }}"
-persistentVolumeReclaimPolicy: {{ .Values.persistence.persistentVolumeReclaimPolicy }}
   {{- end }}
   {{- end }}
   {{- end }}

@@ -157,7 +157,6 @@ persistence:
   accessMode: ReadWriteMany
   size: 1Gi
   storageClass: ""
-  persistentVolumeReclaimPolicy: Retain
   existingClaim: null
 
 settings:
