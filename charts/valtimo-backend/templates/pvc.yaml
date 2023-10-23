@@ -15,7 +15,7 @@ labels:
   heritage: "{{ .Release.Service }}"
 spec:
   accessModes:
-    - {{ .Values.persistence.accessMode | quote }}
+    - ReadWriteMany
   resources:
     requests:
       storage: {{ .Values.persistence.size | quote }}
