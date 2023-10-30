@@ -8,6 +8,11 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
+  progressDeadlineSeconds: 120
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
   selector:
     matchLabels:
       {{- include "valtimo-backend.selectorLabels" . | nindent 6 }}
@@ -52,6 +57,17 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: media
+              mountPath: {{ .Values.persistence.mountPath }}
+      volumes:
+        - name: media
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{ -else }}{{ include "valtimo-backend.fullname" . }}{{- end }}
+          {{- else }}
+          emptyDir: {}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
