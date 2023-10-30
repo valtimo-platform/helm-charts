@@ -126,7 +126,6 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-
 autoscaling:
   # -- Enable/disable autoscaling for the Valtimo-backend deployment
   enabled: false
