@@ -2,6 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 # -- Amount of replicas running the Valtimo-frontend
+
 replicaCount: 1
 
 image:
