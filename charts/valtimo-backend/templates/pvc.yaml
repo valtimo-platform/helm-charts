@@ -5,14 +5,14 @@ metadata:
   name: {{ include "valtimo-backend.fullname" . }}
   namespace: {{ .Release.Namespace }}
   {{- with .Values.persistence.annotations  }}
-annotations:
-  {{ toYaml . | indent 4 }}
-  {{- end }}
-labels:
-  app: {{ template "valtimo-backend.fullname" . }}
-  chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-  release: "{{ .Release.Name }}"
-  heritage: "{{ .Release.Service }}"
+  annotations:
+    {{ toYaml . | indent 4 }}
+    {{- end }}
+  labels:
+    app: {{ template "valtimo-backend.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
 spec:
   accessModes:
     - ReadWriteMany
