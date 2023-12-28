@@ -151,7 +151,7 @@ affinity: {}
 # -- Refer to an existing secret to avoid managing secrets through Helm.
 existingSecret: null
 
-# -- CSI Driver to enable secrets
+# -- CSI Driver to enable secrets store manager
 csi:
   enabled: false
   secretProviderClass: ""
