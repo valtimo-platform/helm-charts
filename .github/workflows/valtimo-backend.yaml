@@ -1,14 +1,15 @@
-name: Build and Publish Helm Chart
+name: Build and Publish Valtimo Backend Helm Chart
 
 on:
   push:
+    paths:
+      - 'charts/valtimo-backend/**'
     branches:
       - main
 
 jobs:
-  build:
+  build_valtimo_backend:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -31,5 +32,7 @@ jobs:
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
+        with:
+          charts_dir: charts/valtimo-backend
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
