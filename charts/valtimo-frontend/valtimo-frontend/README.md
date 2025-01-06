@@ -1,6 +1,6 @@
 # valtimo-frontend
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -8,20 +8,20 @@ A Helm chart for Kubernetes
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| affinity | object | `{}` | Affinity for Valtimo-backend pods assignment  |
-| autoscaling.enabled | bool | `false` | Enable/disable autoscaling for the Valtimo-backend deployment |
-| autoscaling.maxReplicas | int | `100` | Maximum replicas for the Valtimo-backend deployment |
-| autoscaling.minReplicas | int | `1` | Minimum replicas for the Valtimo-backend deployment |
-| autoscaling.targetCPUUtilizationPercentage | int | `80` | Valtimo-backend Deployment autoscaling target CPU percentage |
-| autoscaling.targetMemoryUtilizationPercentage | int | `80` | Valtimo-backend Deployment autoscaling target Mem utilization percentage |
-| fullnameOverride | string | `""` | String to fully override valitmo-backend.fullname |
+| affinity | object | `{}` | Affinity for Valtimo-frontend pods assignment  |
+| autoscaling.enabled | bool | `false` | Enable/disable autoscaling for the Valtimo-frontend deployment |
+| autoscaling.maxReplicas | int | `100` | Maximum replicas for the Valtimo-frontend deployment |
+| autoscaling.minReplicas | int | `1` | Minimum replicas for the Valtimo-frontend deployment |
+| autoscaling.targetCPUUtilizationPercentage | int | `80` | Valtimo-frontend Deployment autoscaling target CPU percentage |
+| autoscaling.targetMemoryUtilizationPercentage | int | `80` | Valtimo-frontend Deployment autoscaling target Mem utilization percentage |
+| fullnameOverride | string | `""` | String to fully override valitmo-frontend.fullname |
 | image.pullPolicy | string | `"IfNotPresent"` | Pull policy for the image |
 | image.repository | string | `""` | Domain of the image repository |
 | image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `""` | Ingress Class which will be used to implement the Ingress |
-| ingress.enabled | bool | `false` | Expose the Valtimo-backend UI through an ingress |
+| ingress.enabled | bool | `false` | Expose the Valtimo-frontend UI through an ingress |
 | ingress.hosts[0] | object | `{"host":"chart-example.local","paths":[{"path":"/","pathType":"ImplementationSpecific"}]}` | Ingress hostname |
 | ingress.hosts[0].paths[0] | object | `{"path":"/","pathType":"ImplementationSpecific"}` | Ingress path |
 | ingress.hosts[0].paths[0].pathType | string | `"ImplementationSpecific"` | Ingress path type |
@@ -31,24 +31,24 @@ A Helm chart for Kubernetes
 | livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
 | livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | livenessProbe.timeoutSeconds | int | `1` | Timeout seconds for livenessProbe |
-| nameOverride | string | `""` | Name override for Valtimo-Backend |
-| nodeSelector | object | `{}` | Node labels for Valtimo-backend pods assignment |
-| podAnnotations | object | `{}` | Annotations for Valtimo-backend pods |
-| podLabels | object | `{}` | Labels for Valtimo-backend pods |
-| podSecurityContext.fsGroup | int | `2000` | Set Valtimo-backend's pod security fsGroup |
+| nameOverride | string | `""` | Name override for Valtimo-frontend |
+| nodeSelector | object | `{}` | Node labels for Valtimo-frontend pods assignment |
+| podAnnotations | object | `{}` | Annotations for Valtimo-frontend pods |
+| podLabels | object | `{}` | Labels for Valtimo-frontend pods |
+| podSecurityContext.fsGroup | int | `2000` | Set Valtimo-frontend's pod security fsGroup |
 | readinessProbe.failureThreshold | int | `6` | Failure threshold for readinessProbe |
 | readinessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for readinessProbe |
 | readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.timeoutSeconds | int | `1` | Timeout seconds for readinessProbe |
-| replicaCount | int | `1` | Amount of replicas running the Valtimo-backend |
+| replicaCount | int | `1` | Amount of replicas running the Valtimo-frontend |
 | resources | object | `{}` |  |
-| securityContext.capabilities.drop | list | `["ALL"]` | Valtimo-backend's container security context capabilities to be dropped |
-| securityContext.readOnlyRootFilesystem | bool | `false` | Valtimo-backend's container security context readOnlyRootFilesystem |
-| securityContext.runAsNonRoot | bool | `true` | Run Valtimo-backend containers as non-root |
-| securityContext.runAsUser | int | `1000` | Run Valtimo-backend containers under this user-ID |
-| service.port | int | `80` | Valtimo-backend service port |
-| service.type | string | `"ClusterIP"` | Valtimo-backend service type |
+| securityContext.capabilities.drop | list | `["ALL"]` | Valtimo-frontend's container security context capabilities to be dropped |
+| securityContext.readOnlyRootFilesystem | bool | `false` | Valtimo-frontend's container security context readOnlyRootFilesystem |
+| securityContext.runAsNonRoot | bool | `true` | Run Valtimo-frontend containers as non-root |
+| securityContext.runAsUser | int | `1000` | Run Valtimo-frontend containers under this user-ID |
+| service.port | int | `80` | Valtimo-frontend service port |
+| service.type | string | `"ClusterIP"` | Valtimo-frontend service type |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `""` |  |
@@ -59,7 +59,7 @@ A Helm chart for Kubernetes
 | settings.keycloak.redirectURL | string | `""` | The URL to redirect to after a succesfull login |
 | settings.keycloak.url | string | `""` | URL which exposes Keycloak |
 | settings.whitelistedDomain | string | `""` | Domain on which the app can run |
-| tolerations | list | `[]` | Tolerations for Valtimo-backend pods assignment |
+| tolerations | list | `[]` | Tolerations for Valtimo-frontend pods assignment |
 
 ----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.11.0](https://github.com/norwoodj/helm-docs/releases/v1.11.0)
+Autogenerated from chart metadata using [helm-docs v1.12.0](https://github.com/norwoodj/helm-docs/releases/v1.12.0)

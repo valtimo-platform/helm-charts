@@ -1,0 +1,24 @@
+{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "valtimo-backend.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  {{- with .Values.persistence.annotations  }}
+  annotations:
+    {{ toYaml . | indent 4 }}
+    {{- end }}
+  labels:
+    app: {{ template "valtimo-backend.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size | quote }}
+  storageClassName: {{ .Values.persistence.storageClass }}
+{{- end }}
+
