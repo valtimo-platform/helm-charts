@@ -1,6 +1,6 @@
 # valtimo-backend
 
-![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 11.0.0](https://img.shields.io/badge/AppVersion-11.0.0-informational?style=flat-square)
+![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 12.2.0](https://img.shields.io/badge/AppVersion-12.2.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -33,11 +33,11 @@ A Helm chart for Kubernetes
 | image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
-| ingress.className | string | `""` | Ingress Class which will be used to implement the Ingress |
 | ingress.enabled | bool | `false` | Expose the Valtimo-backend UI through an ingress |
 | ingress.hosts[0] | object | `{"host":"chart-example.local","paths":[{"path":"/","pathType":"ImplementationSpecific"}]}` | Ingress hostname |
 | ingress.hosts[0].paths[0] | object | `{"path":"/","pathType":"ImplementationSpecific"}` | Ingress path |
 | ingress.hosts[0].paths[0].pathType | string | `"ImplementationSpecific"` | Ingress path type |
+| ingress.ingressClassName | string | `""` | Ingress Class which will be used to implement the Ingress |
 | ingress.tls | list | `[]` | Enable TLS for the Ingress |
 | keycloak | object | `{"auth":{"adminPassword":"","adminUser":"user","existingSecret":""}}` | Keycloak subchart by Bitnami. See https://artifacthub.io/packages/helm/bitnami/keycloak?modal=values for all possible values |
 | livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
@@ -77,6 +77,7 @@ A Helm chart for Kubernetes
 | settings.camunda.adminUserID | string | `"admin"` | Default Camunda admin user |
 | settings.camunda.adminUserPassword | string | `""` | Default Camunda admin password |
 | settings.keycloak.authServerURL | string | `nil` | URL of Keycloak |
+| settings.keycloak.client | string | `nil` | Keycloak client - used to retrieve client roles |
 | settings.keycloak.clientID | string | `nil` | Client-ID to connect with Keycloak |
 | settings.keycloak.clientSecret | string | `""` | Client-Secret to connect with Keycloak |
 | settings.keycloak.publicKey | string | `nil` | Keycloak's Public Key used to verify signature of JWTs |
@@ -87,6 +88,7 @@ A Helm chart for Kubernetes
 | settings.spring.datasource.url | string | `nil` | URL for the database |
 | settings.spring.datasource.username | string | `nil` | Username for the database |
 | settings.spring.profiles.active | string | `"cloud"` | Activated Spring profiles |
+| settings.spring.security | object | `{"oauth2":{"client":{"provider":{"keycloakapi":{"issuerUri":null},"keycloakjwt":{"issuerUri":null}},"registration":{"keycloakapi":{"clientId":null,"clientSecret":null},"keycloakjwt":{"clientId":null}}},"resourceserver":{"jwt":{"jwkSetUri":null}}}}` | oauth2 for keycloak. Use either this or the keycloak config |
 | settings.valtimo.appHostName | string | `nil` | The hostname which exposes Valtimo-backend |
 | settings.valtimo.connectorEncryptionSecret | string | `""` | Encryption secret |
 | settings.valtimo.databaseType | string | `"postgres"` | Type of database to use (can by either 'postgres' or 'mysql') |
