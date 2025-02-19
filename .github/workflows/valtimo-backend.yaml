@@ -6,6 +6,8 @@ on:
       - 'charts/valtimo-backend/**'
     branches:
       - main
+      - release/1.x.x
+      - release/2.x.x
 
 jobs:
   build_valtimo_backend:
