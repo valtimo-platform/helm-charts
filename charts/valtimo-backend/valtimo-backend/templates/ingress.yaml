@@ -1,9 +1,9 @@
 {{- if .Values.ingress.enabled -}}
 
   # Select appropriate API version based on Kubernetes version
-  {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.Version -}}
+  {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1
-  {{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.Version -}}
+  {{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
   {{- else -}}
 apiVersion: extensions/v1beta1
