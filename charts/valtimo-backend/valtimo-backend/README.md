@@ -1,6 +1,6 @@
 # valtimo-backend
 
-![Version: 3.0.3](https://img.shields.io/badge/Version-3.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 12.2.0](https://img.shields.io/badge/AppVersion-12.2.0-informational?style=flat-square)
+![Version: 3.0.4](https://img.shields.io/badge/Version-3.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 12.2.0](https://img.shields.io/badge/AppVersion-12.2.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -34,13 +34,12 @@ A Helm chart for Kubernetes
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.enabled | bool | `false` | Expose the Valtimo-backend UI through an ingress |
-| ingress.hosts[0] | object | `{"host":"chart-example.local","paths":[{"path":"/","pathType":"ImplementationSpecific"}]}` | Ingress hostname |
-| ingress.hosts[0].paths[0] | object | `{"path":"/","pathType":"ImplementationSpecific"}` | Ingress path |
+| ingress.hosts[0] | object | `{"host":"chart-example.local","paths":[{"path":"/","pathType":"ImplementationSpecific","portName":""}]}` | Ingress hostname |
+| ingress.hosts[0].paths[0] | object | `{"path":"/","pathType":"ImplementationSpecific","portName":""}` | Ingress path |
 | ingress.hosts[0].paths[0].pathType | string | `"ImplementationSpecific"` | Ingress path type |
+| ingress.hosts[0].paths[0].portName | string | `""` | When left empty port number will be used instead of port name. |
 | ingress.ingressClassName | string | `""` | Ingress Class which will be used to implement the Ingress |
 | ingress.tls | list | `[]` | Enable TLS for the Ingress |
-| ingress.useAwsLoadBalancerControllerAnnotationAction | object | `{"enabled":false,"portName":"use-annotation"}` | When set to true additional annotions are set |
-| ingress.useAwsLoadBalancerControllerAnnotationAction.portName | string | `"use-annotation"` | Named port. This setting the portName you can't use a port number. |
 | keycloak | object | `{"auth":{"adminPassword":"","adminUser":"user","existingSecret":""}}` | Keycloak subchart by Bitnami. See https://artifacthub.io/packages/helm/bitnami/keycloak?modal=values for all possible values |
 | livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | livenessProbe.initialDelaySeconds | int | `40` | Initial delay seconds for livenessProbe |

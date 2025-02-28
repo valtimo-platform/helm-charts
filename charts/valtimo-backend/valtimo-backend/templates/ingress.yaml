@@ -49,7 +49,7 @@ spec:
               service:
                 name: {{ .serviceName }}
                 port:
-                  {{- if and .useAwsLoadBalancerControllerAnnotationAction.enabled .portName }}
+                  {{- if and (hasKey . "portName") (ne .portName "") }}
                   name: {{ .portName }}
                   {{- else }}
                   number: {{ .servicePort }}
