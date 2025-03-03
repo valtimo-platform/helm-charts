@@ -56,23 +56,14 @@ spec:
           - path: {{ .path }}
             pathType: {{ .pathType | default "Prefix" }}
             backend:
-              {{- $serviceName := .backend.serviceName | default $fullName }}
-                {{- $portName := .backend.portName | default "" }}
-                {{- $servicePort := .backend.servicePort | default 80 }}
-
-                {{- if semverCompare ">=1.19-0" $kubeVersion }}
-                service:
-                  name: {{ $serviceName }}
-                  port:
-                    {{- if and (ne $portName "") }}
-                    name: {{ $portName }}
-                    {{- else }}
-                    number: {{ $servicePort }}
-                    {{- end }}
-                {{- else }}
-                serviceName: {{ $serviceName }}
-                servicePort: {{ $servicePort }}
-                {{- end }}
+              service:
+                name: {{ .backend.service.name | default $fullName }}
+                port:
+                  {{- if and (hasKey .backend.service.port "name") (ne .backend.service.port.name "") }}
+                  name: {{ .backend.service.port.name }}
+                  {{- else }}
+                  number: {{ .backend.service.port.number | default 80 }}
+                  {{- end }}
           {{- end }}
     {{- end }}
   {{- end }}
