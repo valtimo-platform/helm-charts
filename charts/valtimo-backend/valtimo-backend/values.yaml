@@ -83,8 +83,14 @@ ingress:
         - path: /
           # --  Ingress path type
           pathType: ImplementationSpecific
-          # -- When left empty port number will be used instead of port name.
-          portName: ""
+      # -- Setting a port name will overwrite the use of a port number. Setting the service name overwrites the default valtimo-backend.fullname
+      # - path: /api
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: valtimo-backend
+      #       port:
+      #         name: use-annotation
   # -- Enable TLS for the Ingress
   tls: []
   #  - secretName: chart-example-tls

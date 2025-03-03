@@ -1,5 +1,8 @@
 {{- if .Values.ingress.enabled -}}
 
+  # Define the fullName variable
+  {{- $fullName := include "valtimo-backend.fullname" . -}}
+
   # Extract Kubernetes major and minor versions as integers
   {{- $kubeMajor := .Capabilities.KubeVersion.Major | int }}
   {{- $kubeMinor := .Capabilities.KubeVersion.Minor | int }}
@@ -15,7 +18,7 @@ apiVersion: extensions/v1beta1
 
 kind: Ingress
 metadata:
-  name: {{ .Values.ingress.name | default "valtimo-backend-ingress" }}
+  name: {{ $fullName }}
   labels:
     {{- include "valtimo-backend.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -49,7 +52,7 @@ spec:
             pathType: {{ .pathType }}
             {{- end }}
             backend:
-              {{- $defaultServiceName := "valtimo-backend" }}
+              {{- $defaultServiceName := $fullName }}
                 {{- $serviceName := .serviceName | default $defaultServiceName }}
 
                 {{- if gt $kubeMinor 18 }}
