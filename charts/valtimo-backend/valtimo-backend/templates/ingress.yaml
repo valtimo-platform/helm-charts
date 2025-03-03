@@ -1,6 +1,6 @@
 {{- if .Values.ingress.enabled -}}
 
-  # Select appropriate API version based on Kubernetes version
+  # Select appropriate API version based on Kubernetes GitVersion
   {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1
   {{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
@@ -19,7 +19,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if and .Values.ingress.ingressClassName (semverCompare ">=1.18-0" .Capabilities.KubeVersion.Version) }}
+  {{- if and .Values.ingress.ingressClassName (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ .Values.ingress.ingressClassName }}
   {{- end }}
 
@@ -41,23 +41,26 @@ spec:
         paths:
           {{- range .paths }}
           - path: {{ .path }}
-            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.Version) }}
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
             pathType: {{ .pathType }}
             {{- end }}
             backend:
-              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.Version }}
-              service:
-                name: {{ .serviceName }}
-                port:
-                  {{- if and (hasKey . "portName") (ne .portName "") }}
-                  name: {{ .portName }}
-                  {{- else }}
-                  number: {{ .servicePort }}
-                  {{- end }}
-              {{- else }}
-              serviceName: {{ .serviceName }}
-              servicePort: {{ .servicePort }}
-              {{- end }}
+              {{- $defaultServiceName := "valtimo-backend" }}  # Default service name
+                {{- $serviceName := .serviceName | default $defaultServiceName }}  # Use provided service name or fallback
+
+                {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+                service:
+                  name: {{ $serviceName }}
+                  port:
+                    {{- if and (hasKey . "portName") (ne .portName "") }}
+                    name: {{ .portName }}
+                    {{- else }}
+                    number: {{ .servicePort }}
+                    {{- end }}
+                {{- else }}
+                serviceName: {{ $serviceName }}
+                servicePort: {{ .servicePort }}
+                {{- end }}
           {{- end }}
     {{- end }}
   {{- end }}
