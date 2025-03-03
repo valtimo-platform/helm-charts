@@ -3,7 +3,7 @@
   # Define the fullName variable
   {{- $fullName := include "valtimo-backend.fullname" . -}}
 
-  # Extract Kubernetes major and minor versions and convert them to integers
+  # Extract Kubernetes major and minor versions as integers
   {{- $kubeMajor := int .Capabilities.KubeVersion.Major }}
   {{- $kubeMinor := int .Capabilities.KubeVersion.Minor }}
 
@@ -23,7 +23,7 @@
 apiVersion: {{ $apiVersion }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ .Values.ingress.name | default $fullName }}
   labels:
     {{- include "valtimo-backend.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -58,20 +58,22 @@ spec:
             {{- end }}
             backend:
               {{- $defaultServiceName := $fullName }}
-                {{- $serviceName := .serviceName | default $defaultServiceName }}
+                {{- $serviceName := .backend.serviceName | default $defaultServiceName }}
+                {{- $portName := .backend.portName | default "" }}
+                {{- $servicePort := .backend.servicePort | default 80 }}
 
                 {{- if ge $kubeMinor 19 }}
                 service:
                   name: {{ $serviceName }}
                   port:
-                    {{- if and (hasKey . "portName") (ne .portName "") }}
-                    name: {{ .portName }}
+                    {{- if and (ne $portName "") }}
+                    name: {{ $portName }}
                     {{- else }}
-                    number: {{ .servicePort }}
+                    number: {{ $servicePort }}
                     {{- end }}
                 {{- else }}
                 serviceName: {{ $serviceName }}
-                servicePort: {{ .servicePort }}
+                servicePort: {{ $servicePort }}
                 {{- end }}
           {{- end }}
     {{- end }}
