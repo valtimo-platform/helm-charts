@@ -1,11 +1,15 @@
 {{- if .Values.ingress.enabled -}}
 
-  # Select appropriate API version based on Kubernetes GitVersion
-  {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+  # Extract Kubernetes major and minor versions as integers
+  {{- $kubeMajor := .Capabilities.KubeVersion.Major | int }}
+  {{- $kubeMinor := .Capabilities.KubeVersion.Minor | int }}
+
+  # Select appropriate API version based on Kubernetes version
+  {{- if or (gt $kubeMinor 18) (gt $kubeMajor 1) }}
 apiVersion: networking.k8s.io/v1
-  {{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+  {{- else if and (ge $kubeMinor 14) (le $kubeMinor 18) (eq $kubeMajor 1) }}
 apiVersion: networking.k8s.io/v1beta1
-  {{- else -}}
+  {{- else }}
 apiVersion: extensions/v1beta1
   {{- end }}
 
@@ -19,7 +23,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if and .Values.ingress.ingressClassName (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
+  {{- if and .Values.ingress.ingressClassName (gt $kubeMinor 17) }}
   ingressClassName: {{ .Values.ingress.ingressClassName }}
   {{- end }}
 
@@ -41,14 +45,14 @@ spec:
         paths:
           {{- range .paths }}
           - path: {{ .path }}
-            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            {{- if and .pathType (gt $kubeMinor 17) }}
             pathType: {{ .pathType }}
             {{- end }}
             backend:
-              {{- $defaultServiceName := "valtimo-backend" }}  # Default service name
-                {{- $serviceName := .serviceName | default $defaultServiceName }}  # Use provided service name or fallback
+              {{- $defaultServiceName := "valtimo-backend" }}
+                {{- $serviceName := .serviceName | default $defaultServiceName }}
 
-                {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+                {{- if gt $kubeMinor 18 }}
                 service:
                   name: {{ $serviceName }}
                   port:
