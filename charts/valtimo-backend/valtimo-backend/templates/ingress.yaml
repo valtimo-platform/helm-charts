@@ -3,15 +3,16 @@
   # Define the fullName variable
   {{- $fullName := include "valtimo-backend.fullname" . -}}
 
-  # Extract Kubernetes major and minor versions as integers
+  # Extract Kubernetes major and minor versions and convert them to integers
   {{- $kubeMajor := int .Capabilities.KubeVersion.Major }}
   {{- $kubeMinor := int .Capabilities.KubeVersion.Minor }}
+  {{- $kubeVersion := .Capabilities.KubeVersion.Version }}
 
   # Select appropriate API version based on Kubernetes version
   {{- $apiVersion := "" }}
-  {{- if and (eq $kubeMajor 1) (ge $kubeMinor 19) }}
+  {{- if semverCompare ">=1.19-0" $kubeVersion }}
   {{- $apiVersion = "networking.k8s.io/v1" }}
-  {{- else if and (eq $kubeMajor 1) (ge $kubeMinor 14) (le $kubeMinor 18) }}
+  {{- else if semverCompare ">=1.14-0" $kubeVersion }}
   {{- $apiVersion = "networking.k8s.io/v1beta1" }}
   {{- end }}
 
@@ -23,7 +24,7 @@
 apiVersion: {{ $apiVersion }}
 kind: Ingress
 metadata:
-  name: {{ .Values.ingress.name | default $fullName }}
+  name: {{ $fullName }}  # Always use $fullName for Ingress name
   labels:
     {{- include "valtimo-backend.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -31,7 +32,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if and .Values.ingress.ingressClassName (ge $kubeMinor 18) }}
+  {{- if .Values.ingress.ingressClassName }}
   ingressClassName: {{ .Values.ingress.ingressClassName }}
   {{- end }}
 
@@ -53,16 +54,13 @@ spec:
         paths:
           {{- range .paths }}
           - path: {{ .path }}
-            {{- if and .pathType (ge $kubeMinor 18) }}
-            pathType: {{ .pathType }}
-            {{- end }}
+            pathType: {{ .pathType | default "Prefix" }}
             backend:
-              {{- $defaultServiceName := $fullName }}
-                {{- $serviceName := .backend.serviceName | default $defaultServiceName }}
+              {{- $serviceName := .backend.serviceName | default $fullName }}
                 {{- $portName := .backend.portName | default "" }}
                 {{- $servicePort := .backend.servicePort | default 80 }}
 
-                {{- if ge $kubeMinor 19 }}
+                {{- if semverCompare ">=1.19-0" $kubeVersion }}
                 service:
                   name: {{ $serviceName }}
                   port:
