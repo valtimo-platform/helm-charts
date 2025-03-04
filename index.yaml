@@ -3,6 +3,32 @@ entries:
   valtimo-backend:
   - apiVersion: v2
     appVersion: 12.2.0
+    created: "2025-03-04T11:23:55.108269983Z"
+    dependencies:
+    - name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - postgresql
+      version: ~12.5.6
+    - name: mysql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - mysql
+      version: ~9.10.1
+    - name: keycloak
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - keycloak
+      version: ~15.1.2
+    description: A Helm chart for Kubernetes
+    digest: 621104b85d60b23b20ec9ef89bb18ce45d39bc22890a99d0996191fc6aede988
+    name: valtimo-backend
+    type: application
+    urls:
+    - https://github.com/valtimo-platform/helm-charts/releases/download/valtimo-backend-3.0.16/valtimo-backend-3.0.16.tgz
+    version: 3.0.16
+  - apiVersion: v2
+    appVersion: 12.2.0
     created: "2025-03-04T11:00:55.174175265Z"
     dependencies:
     - name: postgresql
@@ -666,4 +692,4 @@ entries:
     urls:
     - https://github.com/valtimo-platform/helm-charts/releases/download/valtimo-frontend-0.1.3/valtimo-frontend-0.1.3.tgz
     version: 0.1.3
-generated: "2025-03-04T11:00:55.174386831Z"
+generated: "2025-03-04T11:23:55.108480985Z"
