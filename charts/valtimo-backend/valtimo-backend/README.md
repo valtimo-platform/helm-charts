@@ -77,7 +77,6 @@ A Helm chart for Kubernetes
 | settings.camunda.adminUserID | string | `"admin"` | Default Camunda admin user |
 | settings.camunda.adminUserPassword | string | `""` | Default Camunda admin password |
 | settings.keycloak.authServerURL | string | `nil` | URL of Keycloak |
-| settings.keycloak.client | string | `nil` | Keycloak client - used to retrieve client roles |
 | settings.keycloak.clientID | string | `nil` | Client-ID to connect with Keycloak |
 | settings.keycloak.clientSecret | string | `""` | Client-Secret to connect with Keycloak |
 | settings.keycloak.publicKey | string | `nil` | Keycloak's Public Key used to verify signature of JWTs |

@@ -229,29 +229,37 @@ settings:
     actuator: 
       # -- Username to access the Spring actuator endpoint
       username: "admin"
+
       # -- Password to access the Spring actuator endpoint
+      # Or, if using existingSecret:: SPRINGACTUATOR_PASSWORD
       password: ""
     datasource: 
       # -- URL for the database
       url: 
       # -- Username for the database
       username: 
+
       # -- Password for the database
+      # Or, if using existingSecret:: SPRING_DATASOURCE_PASSWORD
       password: ""
     
   keycloak: 
-    # -- URL of Keycloak
+    # -- URL of Keycloak - Required
     authServerURL: 
-    # -- Keycloak realm
-    realm: 
+    # -- Required: Keycloak realm - Required
+    realm:
     # -- Client-ID to connect with Keycloak
-    clientID: 
+    clientID: valtimo-user-m2m-client
+    # -- Client-ID for using Valtimo with Keycloak realm roles
+    # More info: https://docs.valtimo.nl/running-valtimo/application-configuration/configuring-keycloak#client-roles
+    realmRoleId: valtimo-console
+
     # -- Client-Secret to connect with Keycloak
+    # Or, if using existingSecret:: KEYCLOAK_CREDENTIALS_SECRET and SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENTSECRET (must set both)
     clientSecret: ""
-    # -- Keycloak's Public Key used to verify signature of JWTs
-    publicKey:
-    # -- Keycloak client - used to retrieve client roles
-    client:
+
+    # -- Keycloak's Public Key used to verify signature of JWTs - Required
+    publicKey: ""
 
   valtimo: 
     # -- Type of database to use (can by either 'postgres' or 'mysql')
@@ -260,13 +268,17 @@ settings:
     appHostName: 
     # -- The port on which Valtimo-backend is listening
     serverPort: 8080
+
     # -- Encryption secret
+    # Or, if using existingSecret:: VALTIMO_CONNECTORENCRYPTION_SECRET
     connectorEncryptionSecret: ""
 
   camunda: 
     # -- Default Camunda admin user
     adminUserID: "admin"
+
     # -- Default Camunda admin password
+    # Or, if using existingSecret:: CAMUNDA_BPM_ADMINUSER_PASSWORD
     adminUserPassword: ""
 
 ##########################################################################
