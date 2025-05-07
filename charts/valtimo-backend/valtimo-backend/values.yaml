@@ -231,7 +231,7 @@ settings:
       username: "admin"
 
       # -- Password to access the Spring actuator endpoint
-      # Or, if using existingSecret:: SPRINGACTUATOR_PASSWORD
+      # Or, if using existingSecret: SPRINGACTUATOR_PASSWORD
       password: ""
     datasource: 
       # -- URL for the database
@@ -240,7 +240,7 @@ settings:
       username: 
 
       # -- Password for the database
-      # Or, if using existingSecret:: SPRING_DATASOURCE_PASSWORD
+      # Or, if using existingSecret: SPRING_DATASOURCE_PASSWORD
       password: ""
     
   keycloak: 
@@ -255,7 +255,7 @@ settings:
     realmRoleId: valtimo-console
 
     # -- Client-Secret to connect with Keycloak
-    # Or, if using existingSecret:: KEYCLOAK_CREDENTIALS_SECRET and SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENTSECRET (must set both)
+    # Or, if using existingSecret: KEYCLOAK_CREDENTIALS_SECRET and SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENTSECRET (must set both)
     clientSecret: ""
 
     # -- Keycloak's Public Key used to verify signature of JWTs - Required
@@ -270,7 +270,7 @@ settings:
     serverPort: 8080
 
     # -- Encryption secret
-    # Or, if using existingSecret:: VALTIMO_CONNECTORENCRYPTION_SECRET
+    # Or, if using existingSecret: VALTIMO_CONNECTORENCRYPTION_SECRET
     connectorEncryptionSecret: ""
 
   camunda: 
@@ -278,7 +278,7 @@ settings:
     adminUserID: "admin"
 
     # -- Default Camunda admin password
-    # Or, if using existingSecret:: CAMUNDA_BPM_ADMINUSER_PASSWORD
+    # Or, if using existingSecret: CAMUNDA_BPM_ADMINUSER_PASSWORD
     adminUserPassword: ""
 
 ##########################################################################
